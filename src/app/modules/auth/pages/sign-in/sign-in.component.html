@@ -1,0 +1,82 @@
+<div class="flex min-h-screen items-center justify-center bg-gray-100">
+  <div class="w-full max-w-lg bg-white shadow-2xl rounded-2xl p-8">
+    <div class="text-center">
+      <img src="assets/img/logo-xx.png" alt="Logo" class="w-32 mx-auto" />
+      <h2 class="text-3xl font-bold mt-4">Sign In</h2>
+      <p class="text-lg text-gray-600">
+        Welcome back! Please enter your details.
+      </p>
+    </div>
+
+    <form
+      [formGroup]="signInForm"
+      (ngSubmit)="onSubmit()"
+      class="mt-6 space-y-5"
+    >
+      <input
+        type="text"
+        formControlName="username"
+        placeholder="Username"
+        class="w-full px-6 py-3 border rounded-xl text-lg"
+      />
+      <input
+        type="password"
+        formControlName="password"
+        placeholder="Password"
+        class="w-full px-6 py-3 border rounded-xl text-lg"
+      />
+
+      <div class="flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            formControlName="rememberMe"
+            id="rememberMe"
+            class="h-5 w-5"
+          />
+          <label for="rememberMe" class="text-lg text-gray-600"
+            >Remember me</label
+          >
+        </div>
+        <a href="#" class="text-blue-500 font-semibold">Forgot password?</a>
+      </div>
+
+      <button
+        type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 text-lg rounded-xl shadow-md"
+      >
+        Sign In
+      </button>
+
+      <div class="text-center mt-4">
+        <span class="text-lg text-gray-500">Or</span>
+      </div>
+
+      <div class="flex space-x-4">
+        <button
+          type="button"
+          class="flex-1 bg-blue-700 hover:bg-blue-800 text-white py-3 text-lg rounded-xl flex items-center justify-center space-x-3 shadow-md"
+        >
+          <i class="fab fa-facebook-f text-2xl"></i>
+          <span>Facebook</span>
+        </button>
+        <button
+          type="button"
+          class="flex-1 bg-red-500 hover:bg-red-600 text-white py-3 text-lg rounded-xl flex items-center justify-center space-x-3 shadow-md"
+        >
+          <i class="fab fa-google text-2xl"></i>
+          <span>Google</span>
+        </button>
+      </div>
+
+      <div class="text-center mt-6">
+        <span class="text-lg text-gray-600">
+          Don't have an account?
+          <a routerLink="/auth/sign-up" class="text-blue-500 font-semibold">
+            Sign Up
+          </a>
+        </span>
+      </div>
+    </form>
+  </div>
+</div>

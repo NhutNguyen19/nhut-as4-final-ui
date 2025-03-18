@@ -1,12 +1,15 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { SignUpComponent } from './modules/auth/pages/sign-up/sign-up.component';
+import { SignInComponent } from './modules/auth/pages/sign-in/sign-in.component';
+import { AuthComponent } from './modules/auth/auth.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
-  title = 'nhutnt7-as4-final-gui';
-}
+export class AppComponent {}
