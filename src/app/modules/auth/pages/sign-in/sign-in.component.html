@@ -7,7 +7,14 @@
         Welcome back! Please enter your details.
       </p>
     </div>
-    <div class="bg"></div>
+
+    <!-- ✅ Hiển thị thông báo lỗi nếu có -->
+    <div
+      *ngIf="errorMessage"
+      class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mt-4"
+    >
+      <strong>Error:</strong> {{ errorMessage }}
+    </div>
 
     <form
       [formGroup]="signInForm"
@@ -29,7 +36,6 @@
 
       <div class="flex space-x-4">
         <div class="w-1/2"></div>
-        <!-- Giữ bố cục giống Sign Up -->
         <div class="w-1/2 flex justify-end">
           <a href="#" class="text-blue-500 font-semibold">Forgot password?</a>
         </div>
@@ -78,9 +84,9 @@
       <div class="text-center mt-6">
         <span class="text-lg text-gray-600">
           Don't have an account?
-          <a routerLink="/auth/sign-up" class="text-blue-500 font-semibold">
-            Sign Up
-          </a>
+          <a routerLink="/auth/sign-up" class="text-blue-500 font-semibold"
+            >Sign Up</a
+          >
         </span>
       </div>
     </form>

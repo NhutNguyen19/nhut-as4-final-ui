@@ -6,22 +6,30 @@
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
     <div class="bg-white rounded-lg shadow p-6">
       <h3 class="text-lg font-medium text-gray-900">Total Users</h3>
-      <p class="text-3xl font-bold text-blue-600 mt-2">1,234</p>
+      <p class="text-3xl font-bold text-blue-600 mt-2">
+        {{ dashboardData.totalUsers }}
+      </p>
     </div>
 
     <div class="bg-white rounded-lg shadow p-6">
       <h3 class="text-lg font-medium text-gray-900">Revenue</h3>
-      <p class="text-3xl font-bold text-green-600 mt-2">$12,345</p>
+      <p class="text-3xl font-bold text-green-600 mt-2">
+        ${{ dashboardData.revenue }}
+      </p>
     </div>
 
     <div class="bg-white rounded-lg shadow p-6">
       <h3 class="text-lg font-medium text-gray-900">Orders</h3>
-      <p class="text-3xl font-bold text-purple-600 mt-2">567</p>
+      <p class="text-3xl font-bold text-purple-600 mt-2">
+        {{ dashboardData.orders }}
+      </p>
     </div>
 
     <div class="bg-white rounded-lg shadow p-6">
       <h3 class="text-lg font-medium text-gray-900">Conversion Rate</h3>
-      <p class="text-3xl font-bold text-orange-600 mt-2">2.34%</p>
+      <p class="text-3xl font-bold text-orange-600 mt-2">
+        {{ dashboardData.conversionRate }}
+      </p>
     </div>
   </div>
 </div>

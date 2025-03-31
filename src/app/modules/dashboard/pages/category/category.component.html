@@ -1,0 +1,72 @@
+<div class="container mx-auto">
+  <h2 class="text-2xl font-semibold text-gray-700 mb-6">Danh sách danh mục</h2>
+
+  <!-- Form thêm/sửa danh mục -->
+  <div class="bg-white p-6 shadow-md rounded-lg mb-6">
+    <h3 class="text-xl font-semibold text-gray-700">
+      {{ isEditing ? "Sửa danh mục" : "Thêm danh mục" }}
+    </h3>
+
+    <label class="block mt-4 text-gray-700">Tên danh mục</label>
+    <input
+      [(ngModel)]="currentCategory.name"
+      class="border p-2 rounded-md w-full mb-3"
+    />
+
+    <label class="block text-gray-700">Mô tả</label>
+    <input
+      [(ngModel)]="currentCategory.description"
+      class="border p-2 rounded-md w-full mb-3"
+    />
+
+    <button
+      (click)="saveCategory()"
+      class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-800"
+    >
+      {{ isEditing ? "Cập nhật" : "Thêm" }}
+    </button>
+    <button
+      *ngIf="isEditing"
+      (click)="resetForm()"
+      class="ml-2 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-800"
+    >
+      Hủy
+    </button>
+  </div>
+
+  <!-- Bảng danh sách danh mục -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full border border-gray-100 rounded-lg">
+      <thead>
+        <tr class="bg-gray-300 text-gray-700">
+          <th class="p-3 text-center">Tên danh mục</th>
+          <th class="p-3 text-center">Mô tả</th>
+          <th class="p-3 text-center">Tùy chọn</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let category of categories; trackBy: trackById"
+          class="even:bg-gray-100 hover:bg-gray-200"
+        >
+          <td class="p-3 text-center">{{ category.name }}</td>
+          <td class="p-3 text-center">{{ category.description }}</td>
+          <td class="p-3 text-center">
+            <button
+              (click)="editCategory(category)"
+              class="px-3 py-1 bg-yellow-600 text-white rounded-md hover:bg-yellow-800"
+            >
+              Sửa
+            </button>
+            <button
+              (click)="deleteCategory(category.id!)"
+              class="ml-2 px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-800"
+            >
+              Xóa
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

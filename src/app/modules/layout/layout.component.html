@@ -1,11 +1,15 @@
 <div class="min-h-screen bg-gray-50">
-  <app-navbar></app-navbar>
+  <!-- Hiển thị loading trong khi xác thực người dùng -->
+  <div *ngIf="isLoading">Loading...</div>
 
-  <div class="flex">
-    <app-sidebar></app-sidebar>
-
-    <main class="flex-1 p-6">
-      <router-outlet></router-outlet>
-    </main>
-  </div>
+  <!-- Chỉ hiển thị khi đã xác thực -->
+  <ng-container *ngIf="!isLoading && isAuthenticated">
+    <app-navbar></app-navbar>
+    <div class="flex">
+      <app-sidebar></app-sidebar>
+      <main class="flex-1 p-6">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
+  </ng-container>
 </div>

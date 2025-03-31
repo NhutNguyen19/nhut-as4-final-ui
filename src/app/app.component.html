@@ -1,1 +1,7 @@
-<app-layout></app-layout>
+<ng-container *ngIf="!isLoginPage(); else loginTemplate">
+  <app-layout></app-layout>
+</ng-container>
+
+<ng-template #loginTemplate>
+  <router-outlet></router-outlet>
+</ng-template>

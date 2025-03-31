@@ -1,0 +1,38 @@
+<div *ngIf="isLoading" class="text-center">⏳ Đang tải đơn hàng...</div>
+
+<div *ngIf="errorMessage" class="text-red-500 text-center">
+  ❌ {{ errorMessage }}
+</div>
+
+<div *ngIf="order" class="p-6 bg-white rounded-lg shadow-md">
+  <h2 class="text-2xl font-bold mb-4">🛒 Đơn hàng #{{ order.id }}</h2>
+
+  <p>
+    <strong>Trạng thái:</strong>
+    <span
+      [ngClass]="{
+        'text-green-500': order.status === 'APPROVED',
+        'text-yellow-500': order.status === 'PENDING',
+        'text-red-500': order.status === 'CANCELED'
+      }"
+    >
+      {{ order.status }}
+    </span>
+  </p>
+  <p><strong>Ngày đặt hàng:</strong> {{ order.orderDate | date : "short" }}</p>
+
+  <h3 class="text-lg font-semibold mt-4">📦 Danh sách sản phẩm:</h3>
+  <ul class="list-disc pl-5">
+    <li *ngFor="let item of order.orderItems">
+      {{ item.product.name }} - {{ item.quantity }} x
+      {{ item.unitPrice | currency : "VND" }}
+      <span class="text-gray-500"
+        >= {{ item.totalPrice | currency : "VND" }}</span
+      >
+    </li>
+  </ul>
+
+  <p class="mt-4 font-semibold text-lg">
+    💰 Tổng tiền: {{ order.totalAmount | currency : "VND" }}
+  </p>
+</div>

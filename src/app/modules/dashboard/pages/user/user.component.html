@@ -1,0 +1,83 @@
+<div class="container mx-auto">
+  <h2 class="text-2xl font-semibold text-gray-700 mb-6">Danh sách User</h2>
+
+  <div class="bg-white p-6 shadow-lg rounded-lg">
+    <!-- Dropdown Selection -->
+    <div class="flex items-center space-x-3 mb-6">
+      <label for="entries" class="text-gray-700 font-medium">Hiển thị</label>
+      <select
+        [(ngModel)]="itemsPerPage"
+        (change)="updatePagination()"
+        id="entries"
+        class="border border-gray-300 p-2 rounded-md focus:ring-2 focus:ring-blue-400"
+      >
+        <option *ngFor="let num of [5, 10, 15, 20]" [value]="num">
+          {{ num }}
+        </option>
+      </select>
+      <span class="text-gray-700">User</span>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full border border-gray-100 rounded-lg">
+        <thead>
+          <tr class="bg-gray-300 text-gray-700">
+            <th class="p-3 text-center">Tài khoảnkhoản</th>
+            <th class="p-3 text-center">Email</th>
+            <th class="p-3 text-center">Vai trò</th>
+            <th class="p-3 text-center">Tùy chọn</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let user of paginatedUsers"
+            class="even:bg-gray-100 hover:bg-gray-200"
+          >
+            <td class="p-3 text-center">{{ user.username }}</td>
+            <td class="p-3 text-center">{{ user.email }}</td>
+            <td class="p-3 text-center">
+              {{ user.roles.length > 0 ? user.roles[0].name : "Không có role" }}
+            </td>
+
+            <td class="p-3 text-center">
+              <button
+                (click)="editUser(user)"
+                class="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-700"
+              >
+                Sửa
+              </button>
+              <button
+                (click)="deleteUser(user.id)"
+                class="ml-2 px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-700"
+              >
+                Xóa
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="flex justify-center items-center mt-6 gap-4">
+      <button
+        (click)="prevPage()"
+        [disabled]="currentPage === 1"
+        class="px-4 py-2 border rounded-md bg-blue-600 text-white hover:bg-blue-800 disabled:bg-gray-300"
+      >
+        Previous
+      </button>
+      <span class="text-gray-700 font-medium"
+        >Trang {{ currentPage }} / {{ totalPages }}</span
+      >
+      <button
+        (click)="nextPage()"
+        [disabled]="currentPage >= totalPages"
+        class="px-4 py-2 border rounded-md bg-blue-600 text-white hover:bg-blue-800 disabled:bg-gray-300"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</div>

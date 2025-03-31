@@ -2,7 +2,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { authRoutes } from './auth.routes';
 import { CommonModule } from '@angular/common';
-import { provideHttpClient } from '@angular/common/http';
+import {
+  HttpClient,
+  provideHttpClient,
+  HttpClientModule,
+} from '@angular/common/http';
 import { AuthComponent } from './auth.component';
 
 @NgModule({
