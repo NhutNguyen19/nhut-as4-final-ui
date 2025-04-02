@@ -24,8 +24,8 @@
   <h3 class="text-lg font-semibold mt-4">📦 Danh sách sản phẩm:</h3>
   <ul class="list-disc pl-5">
     <li *ngFor="let item of order.orderItems">
-      {{ item.product.name }} - {{ item.quantity }} x
-      {{ item.unitPrice | currency : "VND" }}
+      {{ item.productName.id }} - {{ item.quantity }} x
+      {{ item.totalMoney | currency : "VND" }}
       <span class="text-gray-500"
         >= {{ item.totalPrice | currency : "VND" }}</span
       >

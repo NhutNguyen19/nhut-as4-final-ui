@@ -49,15 +49,15 @@ export class OrderDetailComponent implements OnInit {
       // Nếu totalAmount bị sai (0.0), thì tính lại từ orderItems
       if (this.order.totalAmount === 0) {
         this.order.totalAmount = this.order.orderItems.reduce(
-          (sum, item) => sum + item.quantity * item.unitPrice,
+          (sum, item) => sum + item.quantity * item.totalMoney,
           0
         );
       }
 
       // Nếu totalPrice của từng item bị sai, thì tính lại
       this.order.orderItems.forEach((item) => {
-        if (item.totalPrice === 0) {
-          item.totalPrice = item.quantity * item.unitPrice;
+        if (item.totalMoney === 0) {
+          item.totalMoney = item.quantity * item.totalMoney;
         }
       });
     }

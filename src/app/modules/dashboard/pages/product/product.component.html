@@ -2,7 +2,11 @@
   <h2 class="text-2xl font-semibold text-gray-700 mb-6">Danh sách sản phẩm</h2>
 
   <!-- Form thêm/sửa sản phẩm -->
-  <div class="bg-white p-6 shadow-md rounded-lg mb-6">
+  <form
+    #productForm="ngForm"
+    (ngSubmit)="saveProduct()"
+    class="bg-white p-6 shadow-md rounded-lg mb-6"
+  >
     <h3 class="text-xl font-semibold text-gray-700">
       {{ isEditing ? "Sửa sản phẩm" : "Thêm sản phẩm" }}
     </h3>
@@ -11,14 +15,27 @@
     <label class="block mt-4 text-gray-700">Tên sản phẩm</label>
     <input
       [(ngModel)]="currentProduct.name"
+      name="name"
+      required
       class="border p-2 rounded-md w-full mb-3"
       placeholder="Nhập tên sản phẩm"
+      [ngClass]="{
+        'border-red-600': name.invalid && (name.dirty || name.touched)
+      }"
+      #name="ngModel"
     />
+    <div
+      *ngIf="name.invalid && (name.dirty || name.touched)"
+      class="text-red-600 text-sm"
+    >
+      Vui lòng nhập tên sản phẩm!
+    </div>
 
     <!-- Mô tả -->
     <label class="block text-gray-700">Mô tả</label>
     <input
       [(ngModel)]="currentProduct.description"
+      name="description"
       class="border p-2 rounded-md w-full mb-3"
       placeholder="Nhập mô tả sản phẩm"
     />
@@ -28,46 +45,90 @@
     <input
       [(ngModel)]="currentProduct.price"
       type="number"
+      name="price"
+      required
+      min="0"
       class="border p-2 rounded-md w-full mb-3"
       placeholder="Nhập giá sản phẩm"
+      [ngClass]="{
+        'border-red-600': price.invalid && (price.dirty || price.touched)
+      }"
+      #price="ngModel"
     />
+    <div
+      *ngIf="price.invalid && (price.dirty || price.touched)"
+      class="text-red-600 text-sm"
+    >
+      Vui lòng nhập giá sản phẩm (giá phải lớn hơn hoặc bằng 0)!
+    </div>
 
     <!-- Số lượng -->
     <label class="block text-gray-700">Số lượng</label>
     <input
       [(ngModel)]="currentProduct.stockQuantity"
       type="number"
+      name="stockQuantity"
+      required
+      min="0"
       class="border p-2 rounded-md w-full mb-3"
       placeholder="Nhập số lượng sản phẩm"
+      [ngClass]="{
+        'border-red-600':
+          stockQuantity.invalid &&
+          (stockQuantity.dirty || stockQuantity.touched)
+      }"
+      #stockQuantity="ngModel"
     />
+    <div
+      *ngIf="
+        stockQuantity.invalid && (stockQuantity.dirty || stockQuantity.touched)
+      "
+      class="text-red-600 text-sm"
+    >
+      Vui lòng nhập số lượng sản phẩm (số lượng phải lớn hơn hoặc bằng 0)!
+    </div>
 
     <!-- Danh mục -->
     <label class="block text-gray-700">Danh mục</label>
     <select
-      [(ngModel)]="currentProduct.categoryId"
+      [(ngModel)]="currentProduct.category.id"
+      name="categoryId"
+      required
       class="border p-2 rounded-md w-full mb-3"
-      [ngClass]="{ 'border-red-600': !currentProduct.categoryId }"
+      [ngClass]="{
+        'border-red-600':
+          categoryId.invalid && (categoryId.dirty || categoryId.touched)
+      }"
+      #categoryId="ngModel"
     >
-      <option value="" disabled selected>Chọn danh mục</option>
+      <option value="" disabled>Chọn danh mục</option>
       <option *ngFor="let category of categories" [value]="category.id">
         {{ category.name }}
       </option>
     </select>
+    <div
+      *ngIf="categoryId.invalid && (categoryId.dirty || categoryId.touched)"
+      class="text-red-600 text-sm"
+    >
+      Vui lòng chọn danh mục!
+    </div>
 
     <button
-      (click)="saveProduct()"
+      type="submit"
+      [disabled]="productForm.invalid"
       class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-800"
     >
       {{ isEditing ? "Cập nhật" : "Thêm" }}
     </button>
     <button
       *ngIf="isEditing"
+      type="button"
       (click)="resetForm()"
       class="ml-2 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-800"
     >
       Hủy
     </button>
-  </div>
+  </form>
 
   <!-- Bảng danh sách sản phẩm -->
   <div class="overflow-x-auto">
@@ -84,7 +145,7 @@
       </thead>
       <tbody>
         <tr
-          *ngFor="let product of products; ngForTrackBy: trackById"
+          *ngFor="let product of products; trackBy: trackById"
           class="even:bg-gray-100 hover:bg-gray-200"
         >
           <td class="p-3 text-center">{{ product.name }}</td>
@@ -92,7 +153,7 @@
           <td class="p-3 text-center">{{ product.price | currency }}</td>
           <td class="p-3 text-center">{{ product.stockQuantity }}</td>
           <td class="p-3 text-center">
-            {{ getCategoryName(product.categoryId || "") }}
+            {{ getCategoryName(product.category.id) }}
           </td>
           <td class="p-3 text-center">
             <button
@@ -102,7 +163,7 @@
               Sửa
             </button>
             <button
-              (click)="showCategoryName(product.categoryId || '')"
+              (click)="showCategoryName(product.category.id)"
               class="ml-2 px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-800"
             >
               Xem Danh Mục

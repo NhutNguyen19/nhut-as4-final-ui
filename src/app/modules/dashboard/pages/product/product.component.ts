@@ -15,16 +15,17 @@ import { map } from 'rxjs/operators';
 })
 export class ProductComponent implements OnInit {
   products: Product[] = [];
-  categories: { id: string; name: string }[] = [];
+  categories: { id: string; name: string; description: string }[] = [];
   isEditing = false;
+  trackById: TrackByFunction<Product> = (index, item) => item.id;
+
   currentProduct: Product = {
     name: '',
     description: '',
     price: 0,
     stockQuantity: 0,
-    categoryId: '',
+    category: { id: '' },
   };
-  trackById: TrackByFunction<Product> | undefined;
 
   constructor(
     private productService: ProductService,
@@ -36,59 +37,110 @@ export class ProductComponent implements OnInit {
     this.loadCategories();
   }
 
-  // Load categories from API
   loadCategories() {
     this.categoryService.getCategories().subscribe((response) => {
+      console.log('API Categories:', response.data);
       this.categories = response.data.map((category) => ({
         id: category.id ?? '',
         name: category.name,
-      })) as { id: string; name: string }[];
+        description: category.description || 'Không có mô tả',
+      }));
     });
   }
 
-  // Get category name by categoryId
-  getCategoryName(categoryId: string): string {
+  getCategoryName(categoryId: string | undefined): string {
+    if (!categoryId) {
+      console.warn('categoryId không hợp lệ!');
+      return 'Không xác định';
+    }
+
     const category = this.categories.find((cat) => cat.id === categoryId);
-    return category ? category.name : 'Không xác định';
+    if (!category) {
+      console.warn(`Không tìm thấy danh mục với categoryId: ${categoryId}`);
+      return 'Không xác định';
+    }
+    return category.name;
   }
 
-  // Load list of products from API
   loadProducts() {
     this.productService
       .getProducts()
       .pipe(map((response) => response.data))
       .subscribe((products) => {
-        this.products = products;
+        this.products = products.map((product) => ({
+          ...product,
+          category: product.category || { id: '' },
+        }));
+        console.log('Loaded Products:', products);
       });
   }
 
-  // Save (Add or Update) product
   saveProduct() {
+    console.log('Current Product:', this.currentProduct);
+    console.log('Name:', this.currentProduct.name);
+    console.log('Price:', this.currentProduct.price);
+    console.log('Category ID:', this.currentProduct.category?.id);
+
     if (
-      !this.currentProduct.name ||
-      !this.currentProduct.price ||
-      !this.currentProduct.categoryId
+      !this.currentProduct.name?.trim() ||
+      this.currentProduct.price == null ||
+      this.currentProduct.price < 0 ||
+      !this.currentProduct.category?.id?.trim()
     ) {
       alert('Vui lòng nhập đầy đủ thông tin!');
       return;
     }
 
+    const existingCategory = this.categories.find(
+      (cat) => cat.id === this.currentProduct.category.id
+    );
+
+    if (existingCategory) {
+      console.log('categoryId hợp lệ:', this.currentProduct.category.id);
+      this.processSaveProduct();
+    } else {
+      console.log('categoryId không hợp lệ:', this.currentProduct.category.id);
+      alert('Danh mục không hợp lệ!');
+    }
+  }
+
+  private processSaveProduct() {
+    if (
+      !this.currentProduct.category?.id ||
+      this.currentProduct.category.id.trim() === ''
+    ) {
+      alert('Vui lòng chọn danh mục hợp lệ!');
+      return;
+    }
+
+    const productData: Product = {
+      ...this.currentProduct,
+      category: { id: this.currentProduct.category.id.trim() },
+    };
+
+    console.log('Product data to send:', productData);
+
     if (this.isEditing && this.currentProduct.id) {
       this.productService
-        .updateProduct(this.currentProduct.id, this.currentProduct)
-        .subscribe(() => {
-          this.loadProducts();
-          this.resetForm();
+        .updateProduct(this.currentProduct.id, productData)
+        .subscribe({
+          next: () => {
+            this.loadProducts();
+            this.resetForm();
+          },
+          error: (err) => console.error('Update error:', err),
         });
     } else {
-      this.productService.addProduct(this.currentProduct).subscribe(() => {
-        this.loadProducts();
-        this.resetForm();
+      this.productService.addProduct(productData).subscribe({
+        next: () => {
+          this.loadProducts();
+          this.resetForm();
+        },
+        error: (err) => console.error('Add error:', err),
       });
     }
   }
 
-  // Reset the form and toggle editing mode
   resetForm() {
     this.isEditing = false;
     this.currentProduct = {
@@ -96,33 +148,33 @@ export class ProductComponent implements OnInit {
       description: '',
       price: 0,
       stockQuantity: 0,
-      categoryId: '',
+      category: { id: '' },
     };
   }
 
-  // Edit a product (set it for editing mode)
   editProduct(product: Product) {
     this.isEditing = true;
-    this.currentProduct = { ...product };
+    this.currentProduct = {
+      ...product,
+      category: product.category || { id: '' },
+    };
   }
 
-  showCategoryName(categoryId: string): void {
-    console.log(this.getCategoryName(categoryId));
-  }
-
-  // Delete a product
   deleteProduct(productId: string) {
     if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
       this.productService.deleteProduct(productId).subscribe(
         () => {
-          // Successfully deleted, now reload the product list
           this.loadProducts();
         },
         (error) => {
-          // Handle error if deletion fails
           alert('Có lỗi xảy ra khi xóa sản phẩm!');
         }
       );
     }
+  }
+
+  showCategoryName(categoryId: string): void {
+    const categoryName = this.getCategoryName(categoryId);
+    console.log(`Category Name: ${categoryName}`);
   }
 }
